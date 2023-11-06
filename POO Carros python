@@ -1,0 +1,85 @@
+import pandas as pd
+
+dados = pd.read_csv("/content/carrosAtualizado.csv", sep = ';')
+dados['automatico'] = dados['automatico'].fillna(0)
+dados['automatico'] = dados['automatico'].replace({'X':'1'})
+dados['quatro_portas'] = dados['quatro_portas'].fillna(0)
+dados['quatro_portas'] = dados['quatro_portas'].replace({'X':'1'})
+
+print(dados)
+
+class Carros:
+  # Montar método Construtor:
+
+  def __init__(self, marca, modelo, ano, quilometragem, automatico, quatro_portas, valor):
+    self.marca = marca
+    self.modelo = modelo
+    self.ano = ano
+    self.quilometragem = quilometragem
+    self.automatico = automatico
+    self.quatro_portas = quatro_portas
+    self.valor = valor
+
+
+  def CalcularIpva(self):
+
+    #valorReal = float(self.valor)
+
+
+    self.ipva = self.valor*0.04
+    return self.ipva
+
+  def CalcularSeguro(self):
+
+    #valorReal = float(self.valor)
+
+    self.seguro = self.valor*0.066
+    return self.seguro
+
+  def calcularRevisao(self):
+    self.CONSTANTE_REVISAO = 10000
+    self.preco_aumentar = 500
+
+    #quilometragemReal = float(self.quilometragem)
+
+    if self.quilometragem >= self.CONSTANTE_REVISAO:
+      self.diferenca_km =  self.quilometragem / self.CONSTANTE_REVISAO
+      self.revisao = self.diferenca_km * self.preco_aumentar
+      return self.revisao
+    else:
+      print("\nO carro precisa ter mais de 10 mil quilometros rodados para a revisão poder ser realizada")
+      self.revisao = 0
+
+
+  def ImprimirIpva(self):
+    print("\nO ipva do carro será de:", self.ipva, "reais")
+
+  def ImprimirSeguro(self):
+    print("\nO seguro do carro será de:", self.seguro, "reais")
+
+  def ImprimirRevisao(self):
+    print("\nA revisao do carro será de:", self.revisao, "reais")
+  def __str__(self):
+    return f"marca: {self.marca}, modelo: {self.modelo}, ano: {self.ano}, quilometragem: {self.quilometragem}, automatico: {self.automatico}, quatro_portas: {self.quatro_portas}, valor: {self.valor}"
+
+# Passo 3: Crie instâncias da classe Carros com base nas linhas do DataFrame
+carros = []
+for index, row in dados.iterrows():
+
+    carro = Carros(row['marca'], row['modelo'], row['ano'], row['quilometragem'], row['automatico'], row['quatro_portas'], row['valor'])
+    carros.append(carro)
+
+# Agora, você tem uma lista de objetos Carros
+
+
+for i, row in dados.iterrows():
+  print("\nCarro", i+1, ":")
+  carros[i].CalcularIpva()
+  carros[i].CalcularSeguro()
+  carros[i].calcularRevisao()
+  carros[i].ImprimirIpva()
+  print("\n")
+  carros[i].ImprimirSeguro()
+  print("\n")
+  carros[i].ImprimirRevisao()
+  print("\n")
